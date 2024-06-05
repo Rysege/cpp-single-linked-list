@@ -118,7 +118,6 @@ class SingleLinkedList {
     };
 
 public:
-    //SingleLinkedList() : head_(), size_(0) {}
     SingleLinkedList() = default;
 
     // Возвращает количество элементов в списке
@@ -128,7 +127,6 @@ public:
 
     // Сообщает, пустой ли список
     [[nodiscard]] bool IsEmpty() const noexcept {
-        //return size_ == 0;
         return head_.next_node == nullptr;
     }
 
@@ -139,10 +137,6 @@ public:
 
     void PopFront() noexcept {
         EraseAfter(cbefore_begin());
-        //Node* tmp = head_.next_node;
-        //head_.next_node = tmp->next_node;
-        //delete tmp;
-        //--size_;
     }
 
     // Очищает список за время O(N)
@@ -272,7 +266,6 @@ private:
 
     template<typename Container>
     void CopySingleLinkedList(Container& other) {
-        //assert(size_ == 0 && head_.next_node == nullptr);
         SingleLinkedList tmp;
         ConstIterator const_iterator = tmp.cbefore_begin();
 
