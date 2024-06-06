@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <cstddef>
 
 template <typename Type>
@@ -85,6 +86,7 @@ class SingleLinkedList {
         // Возвращает ссылку на самого себя
         // Инкремент итератора, не указывающего на существующий элемент списка, приводит к неопределённому поведению
         BasicIterator& operator++() noexcept {
+            assert(node_ != nullptr);
             node_ = node_->next_node;
             return *this;
         }
@@ -103,6 +105,7 @@ class SingleLinkedList {
         // Вызов этого оператора у итератора, не указывающего на существующий элемент списка,
         // приводит к неопределённому поведению
         [[nodiscard]] reference operator*() const noexcept {
+            assert(node_ != nullptr);
             return node_->value;
         }
 
@@ -110,6 +113,7 @@ class SingleLinkedList {
         // Вызов этого оператора у итератора, не указывающего на существующий элемент списка,
         // приводит к неопределённому поведению
         [[nodiscard]] pointer operator->() const noexcept {
+            assert(node_ != nullptr);
             return &node_->value;
         }
 
@@ -221,6 +225,7 @@ public:
      * Если при создании элемента будет выброшено исключение, список останется в прежнем состоянии
      */
     Iterator InsertAfter(ConstIterator pos, const Type& value) {
+        assert(pos.node_ != nullptr);
         pos.node_->next_node = new Node(value, pos.node_->next_node);
         ++size_;
         return Iterator(pos.node_->next_node);
@@ -231,6 +236,7 @@ public:
      * Возвращает итератор на элемент, следующий за удалённым
      */
     Iterator EraseAfter(ConstIterator pos) noexcept {
+        assert(size_ && pos.node_ && pos.node_->next_node);
         const Node* tmp = pos.node_->next_node;
         pos.node_->next_node = tmp->next_node;
         delete tmp;
@@ -283,6 +289,9 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
+    if (lhs.cbefore_begin() == rhs.cbefore_begin()) {
+        return true;
+    }
     return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
